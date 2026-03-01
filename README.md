@@ -26,7 +26,7 @@ Thank you for joining us on this journey.
 ## Overview
 The Quantum Forge Unity Package provides a wrapper around the quantum-forge c-api, and allows developers to plug real quantum behaviour directly into their gameplay mechanics. It also provides a set of MonoBehaviours that can be added to game objects, for easy Unity editor integration.
 
-This README can get you started. For more information, including advanced topics and the full Unity script API, see our [Full Documentation](https://quantum-native.github.io/quantum-forge-unity-package/index.html)
+This README can get you started. For more information, including advanced topics and the full Unity script API, see our [Full Documentation](https://docs.quantum.dev)
 
 ## Installation
 
@@ -37,7 +37,7 @@ To install the Quantum Forge Unity Package:
 1. Open the Unity Package Manager (Window > Package Manager)
 2. Click the "+" button in the top left corner
 3. Select "Add package from git URL..."
-4. Enter the following URL: `https://github.com/quantum-native/quantum-forge.git?path=unity-package`
+4. Enter the following URL: `https://github.com/quantum-native/quantum-forge-unity.git`
 5. Click "Add"
 
 

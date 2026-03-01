@@ -11,7 +11,7 @@ To install the <span class="brand-font">Quantum Forge</span> Unity Package:
 1. Open the Unity Package Manager (Window > Package Manager)
 2. Click the "+" button in the top left corner
 3. Select "Add package from git URL..."
-4. Enter the following URL: `https://github.com/quantum-native/quantum-forge.git?path=unity-package`
+4. Enter the following URL: `https://github.com/quantum-native/quantum-forge-unity.git`
 5. Click "Add"
 
 ## Quick Start Guide

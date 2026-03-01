@@ -4,11 +4,11 @@ The <span class="brand-font">Quantum Forge</span> Unity package uses a split lic
 
 ## Source Code (MIT)
 
-All C# source code is licensed under the [MIT License](https://github.com/quantum-native/quantum-forge/blob/main/unity-package/LICENSE.md).
+All C# source code is licensed under the [MIT License](https://github.com/quantum-native/quantum-forge-unity/blob/main/LICENSE.md).
 
 ## Compiled Binaries (Proprietary)
 
-Native plugin binaries (.bundle, .dll, .so) are proprietary. See [LICENSE-BINARY.md](https://github.com/quantum-native/quantum-forge/blob/main/LICENSE-BINARY.md) for full terms.
+Native plugin binaries (.bundle, .dll, .so) are proprietary. See [LICENSE-BINARY.md](https://github.com/quantum-native/quantum-forge-unity/blob/main/Runtime/Plugins/MacOS/LICENSE.md) for full terms.
 
 - **Free** for applications generating under $100K/year in revenue
 - **Attribution** required: "Powered by Quantum Forge" in a user-visible location
