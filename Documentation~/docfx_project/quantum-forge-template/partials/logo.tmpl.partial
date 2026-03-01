@@ -1,0 +1,5 @@
+{{!Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.}}
+
+<a class="navbar-brand" href="{{_rel}}index.html" style="display: flex; align-items: center;">
+  <img id="logo" src="{{_rel}}logo.png" alt="{{_appName}}" style="max-height: 50px; margin-right: 10px;">
+</a>

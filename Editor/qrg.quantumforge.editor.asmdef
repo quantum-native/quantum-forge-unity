@@ -1,0 +1,18 @@
+{
+    "name": "qrg.quantumforge.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2233d59e2bcac6a4d8f3692c97bddafd"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,14 @@
+### YamlMime:TableOfContent
+items:
+- name: Home
+  href: index.md
+- name: Getting Started
+  href: articles/getting-started.md
+- name: Advanced Topics
+  href: articles/advanced-topics.md
+- name: API Reference
+  href: api/
+  homepage: api/index.md
+- name: Legal
+  href: articles/proprietary-notice.md
+memberLayout: SamePage

@@ -1,0 +1,36 @@
+{
+  "name": "com.qrg.quantumforge",
+  "version": "1.2.1",
+  "displayName": "Quantum Forge",
+  "description": "A set of tools for adding real quantum behavior to Unity projects.",
+  "unity": "2022.3",
+  "unityRelease": "5f1",
+  "documentationUrl": "https://docs.quantum.dev",
+  "changelogUrl": "https://github.com/quantum-native/quantum-forge-unity/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/quantum-native/quantum-forge-unity/blob/main/LICENSE.md",
+  "keywords": [
+    "quantum"
+  ],
+  "author": {
+    "name": "Chris Cantwell",
+    "email": "hello@quantum.dev",
+    "url": "https://quantumnative.io"
+  },
+  "samples": [
+    {
+      "displayName": "Roshambo",
+      "description": "An example of quantum rock paper scissors.",
+      "path": "Samples~/Roshambo"
+    },
+    {
+      "displayName": "Platformer",
+      "description": "An example of a quantum mechanic in a platformer.",
+      "path": "Samples~/Platformer"
+    },
+    {
+      "displayName": "Actions",
+      "description": "A sample showing various actions and their effects using visualization tools.",
+      "path": "Samples~/Actions"
+    }
+  ]
+}
