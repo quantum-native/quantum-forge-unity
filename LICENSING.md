@@ -30,4 +30,4 @@ while building a sustainable business.
 ## Trademarks
 
 "Quantum Forge" and the Quantum Native logo are trademarks of Quantum Realm
-Games, Inc. The MIT license grants rights to the code, not to the trademarks.
+Games, LLC. The MIT license grants rights to the code, not to the trademarks.
