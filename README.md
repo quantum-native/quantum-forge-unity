@@ -52,7 +52,7 @@ Quantum Forge comes with a set of tests that can be run to ensure that everythin
         "dependencies": {
             ...
         },
-        "testables": ["com.qrg.quantum-forge"]
+        "testables": ["com.qrg.quantumforge"]
     }
 ```
 3. In the Unity Editor open the Test Runner window (Window > General > Test Runner).

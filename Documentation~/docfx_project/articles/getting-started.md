@@ -58,7 +58,7 @@ When you run the game and click the button, you'll see the probability distribut
        "dependencies": {
            ...
        },
-       "testables": ["com.qrg.quantum-forge"]
+       "testables": ["com.qrg.quantumforge"]
    }
    ```
 3. Open the Test Runner window (Window > General > Test Runner)

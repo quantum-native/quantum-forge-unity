@@ -6,8 +6,8 @@
   "unity": "2022.3",
   "unityRelease": "5f1",
   "documentationUrl": "https://docs.quantum.dev",
-  "changelogUrl": "https://github.com/quantum-native/quantum-forge-unity/blob/main/CHANGELOG.md",
-  "licensesUrl": "https://github.com/quantum-native/quantum-forge-unity/blob/main/LICENSE.md",
+  "changelogUrl": "https://github.com/quantum-native/quantum-forge/blob/main/unity-package/CHANGELOG.md",
+  "licensesUrl": "https://github.com/quantum-native/quantum-forge/blob/main/unity-package/LICENSE.md",
   "keywords": [
     "quantum"
   ],
