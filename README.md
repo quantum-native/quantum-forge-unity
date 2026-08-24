@@ -30,7 +30,7 @@ This README can get you started. For more information, including advanced topics
 
 ## Installation
 
-Quantum Forge currently supports Unity 2022.3.1f1 or later, and can be used to build for Windows, Mac, Linux, and WebGL.
+Quantum Forge currently supports Unity 2022.3.5f1 or later, and can be used to build for Windows, Mac, Linux, and WebGL.
 
 To install the Quantum Forge Unity Package:
 
@@ -349,6 +349,13 @@ A measurement is the process of obtaining information about a quantum system. Wh
 
 ### Interference
 Interference is the phenomenon that occurs when two or more waves interact with each other. In quantum mechanics, interference can occur when two or more quantum states interfere with each other.
+
+## Built with Quantum Forge
+
+- **[Quantris](https://quantris.io)** — Tetris meets quantum mechanics. Blocks exist in superposition until measured.
+- **[Quantum Chess](https://store.steampowered.com/app/453870/Quantum_Chess/)** — Chess with quantum moves. Pieces exist in superposition across multiple squares.
+- **[Ponq](https://ponq.io)** — Quantum pong with entangled balls that split and recombine through quantum zones.
+- **[Bloch Invaders](https://bloch.quantumnative.io)** — Space invaders on the Bloch sphere. Damage scales with quantum state overlap.
 
 ## License
 

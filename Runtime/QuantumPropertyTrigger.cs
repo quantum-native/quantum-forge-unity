@@ -33,5 +33,23 @@ namespace QRG.QuantumForge.Runtime
                 onTriggerEnter.Invoke(q);
             }
         }
+
+        void OnTriggerExit2D(Collider2D otherCollider)
+        {
+            var q = otherCollider.gameObject.GetComponent<QuantumProperty>();
+            if (q != null)
+            {
+                onTriggerExit.Invoke(q);
+            }
+        }
+
+        void OnTriggerExit(Collider otherCollider)
+        {
+            var q = otherCollider.gameObject.GetComponent<QuantumProperty>();
+            if (q != null)
+            {
+                onTriggerExit.Invoke(q);
+            }
+        }
     }
 }

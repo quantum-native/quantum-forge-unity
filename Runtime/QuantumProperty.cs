@@ -169,20 +169,111 @@ namespace QRG.QuantumForge.Runtime
             return is_not_value(basis.values[value]);
         }
 
-        internal static QuantumForge.Predicate[] ConvertPredicates(Predicate[] predicates)
+        /// <summary>
+        /// Owns the native predicate handles built for a single quantum operation.
+        /// </summary>
+        /// <remarks>
+        /// Every <see cref="QuantumForge.Predicate"/> produced by
+        /// <c>NativeQuantumProperty.is_value</c> / <c>is_not_value</c> wraps a native
+        /// handle that must be released with <c>Dispose()</c>, or the package leaks
+        /// native memory on every gate application. This scope owns those handles for
+        /// exactly the duration of the operation, so ALWAYS consume
+        /// <see cref="ConvertPredicates"/> with <c>using</c>:
+        /// <code>
+        /// using (var preds = ConvertPredicates(predicates))
+        /// {
+        ///     QuantumForge.Cycle(native, preds.Native);
+        /// }
+        /// </code>
+        /// The <c>using</c> guarantees disposal even when the native call throws, and
+        /// <see cref="Dispose"/> is idempotent per handle (<c>Predicate.Dispose</c>
+        /// nulls its handle), so a double dispose cannot double-free.
+        /// </remarks>
+        internal readonly struct PredicateScope : IDisposable
+        {
+            private readonly QuantumForge.Predicate[] _native;
+
+            internal PredicateScope(QuantumForge.Predicate[] native)
+            {
+                _native = native;
+            }
+
+            /// <summary>
+            /// The native predicates. Valid only until this scope is disposed -- never
+            /// store this array, only pass it straight into a QuantumForge call.
+            /// </summary>
+            internal QuantumForge.Predicate[] Native => _native;
+
+            public void Dispose()
+            {
+                if (_native == null)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < _native.Length; ++i)
+                {
+                    _native[i]?.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Builds the native predicates for <paramref name="predicates"/>.
+        /// The caller OWNS the returned scope and must dispose it (use <c>using</c>).
+        /// </summary>
+        internal static PredicateScope ConvertPredicates(Predicate[] predicates)
         {
             if (predicates == null || predicates.Length == 0)
             {
-                return Array.Empty<QuantumForge.Predicate>();
+                // Fast path: no native handles are created, so there is nothing to
+                // free. Array.Empty allocates nothing and disposing is a no-op.
+                return new PredicateScope(Array.Empty<QuantumForge.Predicate>());
             }
-            return Array.ConvertAll(predicates,
-                p => new QuantumForge.Predicate(p.property._nativeNativeQuantumProperty,
-                    p.property.basis.values.IndexOf(p.value), p.is_equal));
+
+            var native = new QuantumForge.Predicate[predicates.Length];
+            try
+            {
+                for (int i = 0; i < predicates.Length; ++i)
+                {
+                    var p = predicates[i];
+                    if (p == null || p.property == null)
+                    {
+                        throw new ArgumentException(
+                            $"Predicate at index {i} is null or has no QuantumProperty assigned.",
+                            nameof(predicates));
+                    }
+
+                    var nativeProperty = p.property._nativeNativeQuantumProperty;
+                    if (nativeProperty == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"QuantumProperty '{p.property.name}' has no native quantum property " +
+                            "(its Awake failed -- check the basis and initial value in the Editor).");
+                    }
+
+                    int valueIndex = p.property.basis.values.IndexOf(p.value);
+                    native[i] = p.is_equal
+                        ? nativeProperty.is_value(valueIndex)
+                        : nativeProperty.is_not_value(valueIndex);
+                }
+            }
+            catch
+            {
+                // Do not leak the handles that were created before the failure.
+                new PredicateScope(native).Dispose();
+                throw;
+            }
+
+            return new PredicateScope(native);
         }
 
         public static void Cycle(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.Cycle(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Cycle(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void Cycle(params Predicate[] predicates)
@@ -192,7 +283,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Cycle(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Cycle(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Cycle(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void Cycle(float fraction, params Predicate[] predicates)
@@ -202,7 +296,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Shift(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.Shift(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Shift(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void Shift(params Predicate[] predicates)
@@ -212,7 +309,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Shift(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Shift(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Shift(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void Shift(float fraction, params Predicate[] predicates)
@@ -222,7 +322,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Clock(QuantumProperty property, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Clock(property._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Clock(property._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         /// <summary>
@@ -233,12 +336,18 @@ namespace QRG.QuantumForge.Runtime
         /// </summary>
         public void Clock(float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Clock(_nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Clock(_nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public static void Clock(QuantumProperty property, params Predicate[] predicates)
         {
-            QuantumForge.Clock(property._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Clock(property._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         /// <summary>
@@ -249,12 +358,18 @@ namespace QRG.QuantumForge.Runtime
         /// </summary>
         public void Clock(params Predicate[] predicates)
         {
-            QuantumForge.Clock(_nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Clock(_nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public static void X(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.X(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.X(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void X(float fraction, params Predicate[] predicates)
@@ -264,7 +379,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void X(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.X(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.X(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void X(params Predicate[] predicates)
@@ -274,7 +392,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Z(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Z(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Z(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void Z(float fraction, params Predicate[] predicates)
@@ -284,7 +405,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Z(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.Z(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Z(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void Z(params Predicate[] predicates)
@@ -294,7 +418,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Y(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Y(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Y(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void Y(float fraction, params Predicate[] predicates)
@@ -304,7 +431,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Y(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.Y(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Y(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void Y(params Predicate[] predicates)
@@ -314,7 +444,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Hadamard(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.Hadamard(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Hadamard(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void Hadamard(params Predicate[] predicates)
@@ -324,7 +457,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void Hadamard(QuantumProperty prop, float fraction, params Predicate[] predicates)
         {
-            QuantumForge.Hadamard(prop._nativeNativeQuantumProperty, fraction, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Hadamard(prop._nativeNativeQuantumProperty, fraction, preds.Native);
+            }
         }
 
         public void Hadamard(float fraction, params Predicate[] predicates)
@@ -334,7 +470,10 @@ namespace QRG.QuantumForge.Runtime
 
         public static void InverseHadamard(QuantumProperty prop, params Predicate[] predicates)
         {
-            QuantumForge.InverseHadamard(prop._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.InverseHadamard(prop._nativeNativeQuantumProperty, preds.Native);
+            }
         }
 
         public void InverseHadamard(params Predicate[] predicates)
@@ -344,12 +483,19 @@ namespace QRG.QuantumForge.Runtime
 
         public static void PhaseRotate(float angle, params Predicate[] predicates)
         {
-            QuantumForge.PhaseRotate(angle, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.PhaseRotate(angle, preds.Native);
+            }
         }
 
         public static void Swap(QuantumProperty prop1, QuantumProperty prop2, params Predicate[] predicates)
         {
-            QuantumForge.Swap(prop1._nativeNativeQuantumProperty, prop2._nativeNativeQuantumProperty, ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.Swap(prop1._nativeNativeQuantumProperty, prop2._nativeNativeQuantumProperty,
+                    preds.Native);
+            }
         }
 
         public static void ISwap(QuantumProperty prop1, QuantumProperty prop2)
@@ -370,8 +516,11 @@ namespace QRG.QuantumForge.Runtime
         public static void ISwap(QuantumProperty prop1, QuantumProperty prop2, float fraction,
             params Predicate[] predicates)
         {
-            QuantumForge.ISwap(prop1._nativeNativeQuantumProperty, prop2._nativeNativeQuantumProperty, fraction,
-                ConvertPredicates(predicates));
+            using (var preds = ConvertPredicates(predicates))
+            {
+                QuantumForge.ISwap(prop1._nativeNativeQuantumProperty, prop2._nativeNativeQuantumProperty, fraction,
+                    preds.Native);
+            }
         }
 
         /// <summary>
@@ -476,7 +625,12 @@ namespace QRG.QuantumForge.Runtime
 
         public static int Measure(params Predicate[] predicates)
         {
-            return QuantumForge.Measure(ConvertPredicates(predicates));
+            // The predicates must outlive the native call but not the return: `using`
+            // disposes them after Measure produces its value, and also if it throws.
+            using (var preds = ConvertPredicates(predicates))
+            {
+                return QuantumForge.Measure(preds.Native);
+            }
         }
 
         public static int MeasurePredicate(params Predicate[] predicates)

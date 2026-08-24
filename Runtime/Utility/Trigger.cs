@@ -24,5 +24,15 @@ namespace QRG.QuantumForge.Utility
         {
             onTriggerEnter.Invoke();
         }
+
+        void OnTriggerExit2D(Collider2D otherCollider)
+        {
+            onTriggerExit.Invoke();
+        }
+
+        void OnTriggerExit(Collider otherCollider)
+        {
+            onTriggerExit.Invoke();
+        }
     }
 }

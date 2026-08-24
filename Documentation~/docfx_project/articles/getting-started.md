@@ -2,9 +2,17 @@
 
 This guide will help you quickly integrate quantum behavior into your Unity projects using the <span class="brand-font">Quantum Forge</span> package.
 
+## Why Quantum Mechanics in Games?
+
+Quantum Forge gives you real quantum effects — superposition, entanglement, and interference — as drag-and-drop Unity components. These aren't random number generators dressed up with physics terminology. They're actual quantum operations running in a compiled native simulator.
+
+The difference matters for game design: quantum mechanics produces **structured, emergent behavior**. Interference creates patterns. Entanglement creates correlations across your game. Players discover strategies you never planned. In Quantum Chess, players found interference effects that the developers initially mistook for bugs — that's the kind of emergent gameplay quantum mechanics enables.
+
+In 2024, Caltech IQIM and LCAD ran a quantum game jam using Quantum Forge. Student teams with no prior quantum experience built playable quantum games in one week. If you know Unity, you can learn to use quantum mechanics. For a plain-language introduction to the concepts, see [Quantum Concepts for Game Developers](quantum-concepts.md).
+
 ## Installation
 
-<span class="brand-font">Quantum Forge</span> currently supports Unity 2022.3.1f1 or later, and can be used to build for Windows, Mac, Linux, and WebGL.
+<span class="brand-font">Quantum Forge</span> currently supports Unity 2022.3.5f1 or later, and can be used to build for Windows, Mac, Linux, and WebGL.
 
 To install the <span class="brand-font">Quantum Forge</span> Unity Package:
 
@@ -83,8 +91,5 @@ To access these samples, install them from the Unity Package Manager window.
 
 ## Next Steps
 
-Once you're comfortable with the basics, explore the [Advanced Topics](advanced-topics.md) guide to learn about:
-- Working with multiple quantum properties
-- Creating entanglement between properties
-- Using different types of trackers
-- Designing quantum game mechanics
+- [Quantum Concepts](quantum-concepts.md) — Plain-language intro to quantum mechanics for game devs
+- [Advanced Topics](advanced-topics.md) — Entanglement, interference, trackers, and design patterns
